@@ -20,6 +20,15 @@ public class Assignment {
     private String country;
     private String city;
     private String password;
+    private Long timestamp;
+
+    public Long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Long timestamp) {
+        this.timestamp = timestamp;
+    }
 
     public Long getId() {
         return id;

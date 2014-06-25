@@ -3,15 +3,19 @@ package com.ehsunbehravesh.programmingassignment.servlet;
 import com.ehsunbehravesh.programmingassignment.dao.AssignmentDAO;
 import com.ehsunbehravesh.programmingassignment.entity.Assignment;
 import com.ehsunbehravesh.programmingassignment.response.AssignmentResponse;
+import com.ehsunbehravesh.programmingassignment.response.InsertResponse;
 import com.ehsunbehravesh.programmingassignment.response.ServiceResponse;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.TimeZone;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +30,7 @@ public class AssignmentServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
-        ServiceResponse response = new ServiceResponse();
+        InsertResponse response = new InsertResponse();
 
         try {
             String description = req.getParameter("description");
@@ -50,14 +54,17 @@ public class AssignmentServlet extends HttpServlet {
             assignment.setPassword(password);
             assignment.setStatus(status);
             assignment.setTime(new Date().toString());
+            assignment.setTimestamp(new Date().getTime());
             assignment.setUserAgent(useragent);
 
             DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
 
             AssignmentDAO dao = new AssignmentDAO(ds);
 
-            dao.insert(assignment);
+            Entity entity = dao.insert(assignment);
+            long id = entity.getKey().getId();
 
+            response.setId(id);
             response.setSuccess(true);
         } catch (Exception ex) {
             response.setSuccess(false);
@@ -97,8 +104,7 @@ public class AssignmentServlet extends HttpServlet {
             assignment.setDescription(description);
             assignment.setIP(ip);
             assignment.setPassword(password);
-            assignment.setStatus(status);
-            assignment.setTime(new Date().toString());
+            assignment.setStatus(status);            
             assignment.setUserAgent(useragent);
 
             DatastoreService ds = DatastoreServiceFactory.getDatastoreService();

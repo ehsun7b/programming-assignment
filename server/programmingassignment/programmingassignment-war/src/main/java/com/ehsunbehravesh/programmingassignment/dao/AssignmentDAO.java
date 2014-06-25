@@ -29,7 +29,8 @@ public class AssignmentDAO {
         
         fillEntity(assignment, result);
         
-        ds.put(result);
+        Key key = ds.put(result);
+        
         return result;
     }
     
@@ -79,6 +80,7 @@ public class AssignmentDAO {
         entity.setProperty("status", assignment.getStatus());
         entity.setProperty("time", assignment.getTime());
         entity.setProperty("userAgent", assignment.getUserAgent());
+        entity.setProperty("timestamp", assignment.getTimestamp());
     }
 
     private void fillAssignment(final Entity entity, Assignment assignment) {
@@ -93,6 +95,7 @@ public class AssignmentDAO {
         assignment.setStatus((String) entity.getProperty("status"));
         assignment.setTime((String) entity.getProperty("time"));
         assignment.setUserAgent((String) entity.getProperty("userAgent"));
+        assignment.setTimestamp((Long) entity.getProperty("timestamp"));
     }
 
     private List<Assignment> asAssignments(final List<Entity> entities) {
